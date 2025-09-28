@@ -14,12 +14,16 @@ namespace CaseStudyWebApi.Controllers
 
         private readonly AppDbContext _dbContext;
 
+
         public ProductsController(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        // GET: api/Products
+        /// <summary>
+        /// Retrieves all products from the data store.
+        /// </summary>
+        /// <remarks>GET: api/Products.</remarks>
         [HttpGet]
         [EndpointSummary("Get all products")]
         [EndpointDescription("Call to retrieve all products from the data store.")]
@@ -28,7 +32,11 @@ namespace CaseStudyWebApi.Controllers
             return await _dbContext.Products.ToListAsync();
         }
 
-        // GET: api/Products/11
+        /// <summary>
+        /// Get one concrete product according to its primary key.
+        /// </summary>
+        /// <param name="id">Primary key of <see cref="Product"/></param>
+        /// <remarks>GET: api/Products/11</remarks>
         [HttpGet("{id}")]
         [EndpointSummary("Get the one product")]
         [EndpointDescription("Call to get one concrete product according to its primary key.")]
@@ -44,7 +52,11 @@ namespace CaseStudyWebApi.Controllers
             return foundProduct;
         }
 
-        // POST: api/Products
+        /// <summary>
+        /// Creates a new product in the data store.
+        /// </summary>
+        /// <param name="product">DTO product to insert</param>
+        /// <remarks>POST: api/Products</remarks>
         [HttpPost]
         [EndpointSummary("Creating a new product")]
         [EndpointDescription("Call to create a new product type record in the data store.")]
@@ -66,7 +78,12 @@ namespace CaseStudyWebApi.Controllers
             return CreatedAtAction(nameof(GetProductById), new { id = productItem.Id }, productItem);
         }
 
-        // PUT: api/Products/11
+        /// <summary>
+        /// Updates the stock quantity of a specific product.
+        /// </summary>
+        /// <param name="id">Primary key of updating <see cref="Product"/></param>
+        /// <param name="quantityChange"> Value of quantity of <see cref="Product"/> to update</param>
+        /// <remarks>PUT: api/Products/11</remarks>
         [HttpPut("{id}")]
         [EndpointSummary("Adjusting the quantity in stock")]
         [EndpointDescription("Call to update the quantity of one particular product in stock.")]
