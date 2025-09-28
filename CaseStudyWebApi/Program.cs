@@ -1,4 +1,5 @@
 using CaseStudyWebApi.Data;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,5 +36,27 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Add global exception handler
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+
+        Exception? exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+        if (exception != null)
+        {
+            var result = new
+            {
+                error = exception.Message,
+                stackTrace = exception.StackTrace
+            };
+            await context.Response.WriteAsJsonAsync(result);
+        }
+    });
+});
 
 app.Run();
