@@ -12,6 +12,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    // Enable Swagger and specifiy the endpoint.
+    app.UseSwaggerUI(opt =>
+    {
+        opt.SwaggerEndpoint("/openapi/v1.json", "api");
+    });
 }
 
 app.UseHttpsRedirection();
