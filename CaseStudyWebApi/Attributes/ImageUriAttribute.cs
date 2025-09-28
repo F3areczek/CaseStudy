@@ -22,7 +22,7 @@ namespace CaseStudyWebApi.Attributes
                 if (Array.Exists(AllowedImgExtensions, e => e == ext))
                     return ValidationResult.Success;
 
-                return new ValidationResult($"{validationContext.DisplayName} must be an image URL. Supported extensions are {string.Join(",", AllowedImgExtensions)}.");
+                return new ValidationResult($"{validationContext.DisplayName} must be an image URL. Supported extensions are {string.Join(", ", AllowedImgExtensions)}.");
             }
 
             return new ValidationResult($"{validationContext.DisplayName} is not a valid URI.");
