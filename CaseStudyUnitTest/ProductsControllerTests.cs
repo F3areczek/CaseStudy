@@ -1,7 +1,8 @@
 ﻿using CaseStudyUnitTest;
-using CaseStudyWebApi.Controllers;
-using CaseStudyWebApi.Data;
-using Microsoft.AspNetCore.Mvc; 
+using CaseStudyWebApi.Controllers.v1;
+using CaseStudyWebApi.Data.Nonpersistent;
+using CaseStudyWebApi.Data.Persistent;
+using Microsoft.AspNetCore.Mvc;
 
 public class ProductsControllerTests
 {

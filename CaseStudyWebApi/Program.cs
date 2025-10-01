@@ -1,3 +1,6 @@
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using CaseStudyWebApi.Configure;
 using CaseStudyWebApi.Data;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -7,15 +10,28 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// Add OpenAPI with versions
+OpenApiConfigure openApiConfigure = new(builder.Configuration);
+builder.Services.AddOpenApi("v1", options => openApiConfigure.CreateOpenApiInfo(ref options, "v1"));
+builder.Services.AddOpenApi("v2", options => openApiConfigure.CreateOpenApiInfo(ref options, "v2", "This version of the API adds support for pagination when retrieving the list of all products."));
+
+// Add API versioning to the project
+builder.Services.AddApiVersioning(option =>
+{
+    option.AssumeDefaultVersionWhenUnspecified = true;
+    option.DefaultApiVersion = new ApiVersion(1);
+    option.ReportApiVersions = true;
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
 
 // Register the DbContext with a connection string from appsettings.json
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
 
 var app = builder.Build();
 
@@ -24,11 +40,16 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 
-    // Enable Swagger and specifiy the endpoint.
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/openapi/v1.json", "api");
+        // Build a swagger endpoint for each discovered API version
+        IApiVersionDescriptionProvider provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+        foreach (ApiVersionDescription description in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint($"/openapi/{description.GroupName}.json", description.GroupName.ToLowerInvariant());
+        }
     });
+
 }
 
 app.UseHttpsRedirection();
