@@ -40,27 +40,5 @@ namespace CaseStudy.WebApi.Configure
                 return Task.CompletedTask;
             });
         }
-
-        /// <summary>
-        /// Create a default OpenAPI document with title, description and contact information. 
-        /// Informations are read from appsettings.json
-        /// </summary>
-        /// <param name="doc">Working <see cref="OpenApiDocument"/> document</param>
-        /// <param name="version">Version of API</param>
-        /// <param name="versionFeatures">New features in this version of API</param>
-        private void GetDefaultOpenApiDocument(ref OpenApiDocument doc, string version, string versionFeatures = "")
-        {
-            doc.Info = new OpenApiInfo
-            {
-                Title = $"{configuration["OpenApiInfo:Title"]} {version}",
-                Description = $"{configuration["OpenApiInfo:Description"]} {versionFeatures}",
-                Contact = new OpenApiContact
-                {
-                    Name = configuration["OpenApiInfo:Contact:Name"],
-                    Email = configuration["OpenApiInfo:Contact:Email"],
-                    Url = new Uri(configuration["OpenApiInfo:Contact:Url"]!)
-                }
-            };
-        }
     }
 }
