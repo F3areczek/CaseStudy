@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CaseStudyWebApi.Attributes
+namespace CaseStudy.WebApi.Attributes
 {
     /// <summary>
     /// A custom attribute to define valid URIs ending with a suffix for images.

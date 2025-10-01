@@ -1,9 +1,9 @@
-﻿using CaseStudyWebApi.Controllers.v1;
-using CaseStudyWebApi.Data;
-using CaseStudyWebApi.Data.Persistent;
+﻿using CaseStudy.WebApi.Controllers.v1;
+using CaseStudy.WebApi.Data;
+using CaseStudy.WebApi.Data.Persistent;
 using Microsoft.EntityFrameworkCore;
 
-namespace CaseStudyUnitTest
+namespace CaseStudy.UnitTest
 {
     /// <summary>
     /// Provides test data by seeding them into in-memory store.

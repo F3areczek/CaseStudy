@@ -1,7 +1,7 @@
-﻿using CaseStudyWebApi.Data.Persistent;
+﻿using CaseStudy.WebApi.Data.Persistent;
 using Microsoft.EntityFrameworkCore;
 
-namespace CaseStudyWebApi.Data
+namespace CaseStudy.WebApi.Data
 {
     /// <summary>
     /// Database context for the application, managing the connection to the database and providing access to the Product entities.

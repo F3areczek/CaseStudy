@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 
-namespace CaseStudyWebApi.Configure
+namespace CaseStudy.WebApi.Configure
 {
     /// <summary>
     /// Configure class for OpenAPI options

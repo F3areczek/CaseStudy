@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CaseStudyWebApi\CaseStudyWebApi.csproj" />
+    <ProjectReference Include="..\CaseStudy.WebApi\CaseStudy.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

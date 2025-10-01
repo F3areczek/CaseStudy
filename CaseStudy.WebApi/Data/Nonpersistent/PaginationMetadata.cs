@@ -1,4 +1,4 @@
-﻿namespace CaseStudyWebApi.Data.Nonpersistent
+﻿namespace CaseStudy.WebApi.Data.Nonpersistent
 {
     /// <summary>
     /// Class for pagination metadata information

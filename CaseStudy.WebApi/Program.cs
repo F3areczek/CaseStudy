@@ -1,7 +1,7 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
-using CaseStudyWebApi.Configure;
-using CaseStudyWebApi.Data;
+using CaseStudy.WebApi.Configure;
+using CaseStudy.WebApi.Data;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace CaseStudyWebApi.Migrations
+namespace CaseStudy.WebApi.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

@@ -1,18 +1,17 @@
 ﻿using Asp.Versioning;
-using CaseStudyWebApi.Data;
-using CaseStudyWebApi.Data.Nonpersistent;
-using CaseStudyWebApi.Data.Persistent;
+using CaseStudy.WebApi.Data;
+using CaseStudy.WebApi.Data.Nonpersistent;
+using CaseStudy.WebApi.Data.Persistent;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
 
-namespace CaseStudyWebApi.Controllers.v2
+namespace CaseStudy.WebApi.Controllers.v1
 {
     /// <summary>
     /// Controller for Product endpoints
     /// </summary>
     [ApiController]
-    [ApiVersion("2.0")]
+    [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class ProductsController : ControllerBase
     {
@@ -31,19 +30,10 @@ namespace CaseStudyWebApi.Controllers.v2
         /// <remarks>GET: api/Products.</remarks>
         [HttpGet]
         [EndpointSummary("Get all products")]
-        [EndpointDescription("Call to retrieve paginated products from the data store. Support pagination.")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        [EndpointDescription("Call to retrieve all products from the data store.")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            // Get total count of items
-            int countOfItems = await _dbContext.Products.CountAsync();
-
-            // Retrieve paginated items
-            IEnumerable products = await _dbContext.Products.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-            // Add pagination metadata to response headers
-            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(new PaginationMetadata(countOfItems, pageSize, page)));
-
-            return Ok(products);
+            return await _dbContext.Products.ToListAsync();
         }
 
         /// <summary>
