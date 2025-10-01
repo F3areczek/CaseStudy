@@ -135,7 +135,7 @@ namespace CaseStudy.WebApi.Controllers.v2
         public async Task<IActionResult> PutProductStockQuantity(int id, [Required] int quantityChange, [FromServices] IProductStockUpdateQueue queue)
         {
             await queue.QueueStockUpdateAsync(id, quantityChange);
-            return Accepted(new { Message = "Stock update request accepted for processing", ProductId = id });
+            return Accepted(new ProductStockUpdateResponse { Message = "Stock update request accepted for processing", ProductId = id });
         }
     }
 }

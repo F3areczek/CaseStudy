@@ -1,7 +1,9 @@
 ﻿using CaseStudy.WebApi.Controllers.v2;
+using CaseStudy.WebApi.Data.Interface;
 using CaseStudy.WebApi.Data.Nonpersistent;
 using CaseStudy.WebApi.Data.Persistent;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 
 namespace CaseStudy.UnitTest.v2
 {
@@ -134,6 +136,36 @@ namespace CaseStudy.UnitTest.v2
             ProductsController controller = await ProductsTestData.GetProductControllerV2();
             ActionResult<Product> result = await controller.PutProductStockQuantity(999, 5);
             Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        /// <summary>
+        /// TEST - Queues a stock update request and returns Accepted response.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PutProductStockQuantity_QueuesRequest_ReturnsAccepted()
+        {
+            int productId = 45;
+            int quantityChange = 11;
+
+            // Mock the queue
+            Mock<IProductStockUpdateQueue> mockQueue = new Mock<IProductStockUpdateQueue>();
+            mockQueue
+                .Setup(q => q.QueueStockUpdateAsync(productId, quantityChange))
+                .Returns(ValueTask.CompletedTask)
+                .Verifiable();
+
+            ProductsController controller = new ProductsController(null!); // Empty DbContext for this test
+            var result = await controller.PutProductStockQuantity(productId, quantityChange, mockQueue.Object);
+
+            AcceptedResult acceptedResult = Assert.IsType<AcceptedResult>(result);
+            ProductStockUpdateResponse stockUpdateResponse = Assert.IsAssignableFrom<ProductStockUpdateResponse>(acceptedResult.Value);
+
+            Assert.Equal("Stock update request accepted for processing", stockUpdateResponse.Message);
+            Assert.Equal(productId, stockUpdateResponse.ProductId);
+
+            // Verify the queue was called
+            mockQueue.Verify(q => q.QueueStockUpdateAsync(productId, quantityChange), Times.Once);
         }
     }
 }
