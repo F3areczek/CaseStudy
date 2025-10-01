@@ -1,10 +1,12 @@
 ﻿using Asp.Versioning;
 using CaseStudy.WebApi.Data;
+using CaseStudy.WebApi.Data.Interface;
 using CaseStudy.WebApi.Data.Nonpersistent;
 using CaseStudy.WebApi.Data.Persistent;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace CaseStudy.WebApi.Controllers.v2
 {
@@ -101,7 +103,7 @@ namespace CaseStudy.WebApi.Controllers.v2
         [HttpPut("{id}")]
         [EndpointSummary("Adjusting the quantity in stock")]
         [EndpointDescription("Call to update the quantity of one particular product in stock.")]
-        public async Task<ActionResult<Product>> PutProductStockQuantity(int id, int quantityChange)
+        public async Task<ActionResult<Product>> PutProductStockQuantity(int id, [Required] int quantityChange)
         {
 
             Product? productItem = await _dbContext.Products.FindAsync(id);
@@ -118,6 +120,22 @@ namespace CaseStudy.WebApi.Controllers.v2
             await _dbContext.SaveChangesAsync();
 
             return Ok(productItem);
+        }
+
+        /// <summary>
+        /// Adding a request to the queue for processing stock quantity.
+        /// </summary>
+        /// <param name="id">Primary key of updating <see cref="Product"/></param>
+        /// <param name="quantityChange"> Value of quantity of <see cref="Product"/> to update</param>
+        /// <param name="queue">Queue from service to process</param>
+        /// <remarks>PUT: api/Products/QueueStockUpdate/11</remarks>
+        [HttpPut("QueueStockUpdate/{id}")]
+        [EndpointSummary("Adjusting the quantity in stock from queue")]
+        [EndpointDescription("Call to add a request for stock quantity adjustment to the queue.")]
+        public async Task<IActionResult> PutProductStockQuantity(int id, [Required] int quantityChange, [FromServices] IProductStockUpdateQueue queue)
+        {
+            await queue.QueueStockUpdateAsync(id, quantityChange);
+            return Accepted(new { Message = "Stock update request accepted for processing", ProductId = id });
         }
     }
 }

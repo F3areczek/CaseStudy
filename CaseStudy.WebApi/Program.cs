@@ -2,6 +2,9 @@ using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using CaseStudy.WebApi.Configure;
 using CaseStudy.WebApi.Data;
+using CaseStudy.WebApi.Data.Interface;
+using CaseStudy.WebApi.Data.Nonpersistent;
+using CaseStudy.WebApi.Services;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +35,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+// Register the in-memory stock update queue and the background worker
+builder.Services.AddSingleton<IProductStockUpdateQueue, InMemoryStockUpdateQueue>();
+builder.Services.AddHostedService<ProductStockUpdateWorker>();
 
 var app = builder.Build();
 

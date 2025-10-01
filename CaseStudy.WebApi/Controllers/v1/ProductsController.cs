@@ -4,6 +4,7 @@ using CaseStudy.WebApi.Data.Nonpersistent;
 using CaseStudy.WebApi.Data.Persistent;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace CaseStudy.WebApi.Controllers.v1
 {
@@ -91,7 +92,7 @@ namespace CaseStudy.WebApi.Controllers.v1
         [HttpPut("{id}")]
         [EndpointSummary("Adjusting the quantity in stock")]
         [EndpointDescription("Call to update the quantity of one particular product in stock.")]
-        public async Task<ActionResult<Product>> PutProductStockQuantity(int id, int quantityChange)
+        public async Task<ActionResult<Product>> PutProductStockQuantity(int id, [Required] int quantityChange)
         {
 
             Product? productItem = await _dbContext.Products.FindAsync(id);
