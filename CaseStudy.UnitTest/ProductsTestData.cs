@@ -1,4 +1,5 @@
 ﻿using CaseStudy.WebApi.Controllers.v1;
+using CaseStudy.WebApi.Controllers.v2;
 using CaseStudy.WebApi.Data;
 using CaseStudy.WebApi.Data.Persistent;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +16,24 @@ namespace CaseStudy.UnitTest
         /// Creates and returns an instance of <see cref="ProductsController"/> initialized with an in-memory database.
         /// </summary>
         /// <remarks>This method sets up an in-memory database, seeds it with product data, and then
-        /// creates a new  <see cref="ProductsController"/> instance using the seeded database.
-        public static async Task<ProductsController> GetProductController()
+        /// creates a new  <see cref="WebApi.Controllers.v1.ProductsController"/> instance using the seeded database.
+        public static async Task<WebApi.Controllers.v1.ProductsController> GetProductControllerV1()
         {
             AppDbContext inMemoryDatabase = GetInMemoryDb();
             await SeedProducts(inMemoryDatabase);
-            return new ProductsController(inMemoryDatabase);
+            return new WebApi.Controllers.v1.ProductsController(inMemoryDatabase);
+        }
+
+        /// <summary>
+        /// Creates and returns an instance of <see cref="ProductsController"/> initialized with an in-memory database.
+        /// </summary>
+        /// <remarks>This method sets up an in-memory database, seeds it with product data, and then
+        /// creates a new  <see cref="WebApi.Controllers.v2.ProductsController"/> instance using the seeded database.
+        public static async Task<WebApi.Controllers.v2.ProductsController> GetProductControllerV2()
+        {
+            AppDbContext inMemoryDatabase = GetInMemoryDb();
+            await SeedProducts(inMemoryDatabase);
+            return new WebApi.Controllers.v2.ProductsController(inMemoryDatabase);
         }
 
         private static AppDbContext GetInMemoryDb()

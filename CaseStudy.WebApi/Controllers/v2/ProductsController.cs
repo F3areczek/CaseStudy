@@ -34,18 +34,18 @@ namespace CaseStudy.WebApi.Controllers.v2
         [HttpGet]
         [EndpointSummary("Get all products")]
         [EndpointDescription("Call to retrieve paginated products from the data store. Support pagination.")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IEnumerable<Product>> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             // Get total count of items
             int countOfItems = await _dbContext.Products.CountAsync();
 
             // Retrieve paginated items
-            IEnumerable products = await _dbContext.Products.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            IList<Product> products = await _dbContext.Products.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             // Add pagination metadata to response headers
-            Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(new PaginationMetadata(countOfItems, pageSize, page)));
+            Response?.Headers?.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(new PaginationMetadata(countOfItems, pageSize, page)));
 
-            return Ok(products);
+            return products;
         }
 
         /// <summary>

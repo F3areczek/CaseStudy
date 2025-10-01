@@ -1,23 +1,36 @@
-﻿using CaseStudy.WebApi.Controllers.v1;
+﻿using CaseStudy.WebApi.Controllers.v2;
 using CaseStudy.WebApi.Data.Nonpersistent;
 using CaseStudy.WebApi.Data.Persistent;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CaseStudy.UnitTest
+namespace CaseStudy.UnitTest.v2
 {
     public class ProductsControllerTests
     {
         /// <summary>
-        /// TEST - Retrieves all products from the data store and count it.
+        /// TEST - Retrieves products from the data store with default pagination (page 1, page size 10).
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetProducts_ReturnsAllProducts()
+        public async Task GetProducts_ReturnWithDefaultPagination()
         {
-            ProductsController controller = await ProductsTestData.GetProductController();
+            ProductsController controller = await ProductsTestData.GetProductControllerV2();
             var result = await controller.GetProducts();
-            IEnumerable<Product> products = Assert.IsAssignableFrom<IEnumerable<Product>>(result.Value);
-            Assert.Equal(30, products.Count());
+            IEnumerable<Product> products = Assert.IsAssignableFrom<IEnumerable<Product>>(result);
+            Assert.Equal(10, products.Count());
+        }
+
+        /// <summary>
+        /// TEST - Retrieves products from the data store on 2nd page with page size 17.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetProducts_ReturnsPagination()
+        {
+            ProductsController controller = await ProductsTestData.GetProductControllerV2();
+            var result = await controller.GetProducts(2,17);
+            IEnumerable<Product> products = Assert.IsAssignableFrom<IEnumerable<Product>>(result);
+            Assert.Equal(13, products.Count());
         }
 
 
@@ -28,7 +41,7 @@ namespace CaseStudy.UnitTest
         [Fact]
         public async Task GetProductById_ReturnsProduct_WhenFound()
         {
-            ProductsController controller = await ProductsTestData.GetProductController();
+            ProductsController controller = await ProductsTestData.GetProductControllerV2();
             ActionResult<Product> result = await controller.GetProductById(5);
             var okResult = Assert.IsType<ActionResult<Product>>(result);
             Assert.Equal(5, result.Value?.Id);
@@ -42,7 +55,7 @@ namespace CaseStudy.UnitTest
         [Fact]
         public async Task GetProductById_ReturnsNotFound_WhenMissing()
         {
-            ProductsController controller = await ProductsTestData.GetProductController();
+            ProductsController controller = await ProductsTestData.GetProductControllerV2();
             ActionResult<Product> result = await controller.GetProductById(444);
             Assert.IsType<NotFoundResult>(result.Result);
         }
@@ -54,7 +67,7 @@ namespace CaseStudy.UnitTest
         [Fact]
         public async Task PostProduct_CreatesNewProduct()
         {
-            ProductsController controller = await ProductsTestData.GetProductController();
+            ProductsController controller = await ProductsTestData.GetProductControllerV2();
             ProductDtoCreate dto = new ProductDtoCreate
             {
                 Name = "Small Table",
@@ -77,7 +90,7 @@ namespace CaseStudy.UnitTest
         [Fact]
         public async Task PutProductStockQuantity_IncreasesQuantity()
         {
-            ProductsController controller = await ProductsTestData.GetProductController();
+            ProductsController controller = await ProductsTestData.GetProductControllerV2();
             ActionResult<Product> result = await controller.PutProductStockQuantity(14, 4);
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             Product product = Assert.IsType<Product>(okResult.Value);
@@ -91,7 +104,7 @@ namespace CaseStudy.UnitTest
         [Fact]
         public async Task PutProductStockQuantity_DecreasesQuantity()
         {
-            ProductsController controller = await ProductsTestData.GetProductController();
+            ProductsController controller = await ProductsTestData.GetProductControllerV2();
             ActionResult<Product> result = await controller.PutProductStockQuantity(25, -8);
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             Product product = Assert.IsType<Product>(okResult.Value);
@@ -105,7 +118,7 @@ namespace CaseStudy.UnitTest
         [Fact]
         public async Task PutProductStockQuantity_ReturnsBadRequest_WhenInsufficientStock()
         {
-            ProductsController controller = await ProductsTestData.GetProductController();
+            ProductsController controller = await ProductsTestData.GetProductControllerV2();
             ActionResult<Product> result = await controller.PutProductStockQuantity(5, -15);
             var badRequest = Assert.IsType<BadRequestObjectResult>(result.Result);
             Assert.Equal("Insufficient stock quantity.", badRequest.Value);
@@ -118,7 +131,7 @@ namespace CaseStudy.UnitTest
         [Fact]
         public async Task PutProductStockQuantity_ReturnsNotFound_WhenProductMissing()
         {
-            ProductsController controller = await ProductsTestData.GetProductController();
+            ProductsController controller = await ProductsTestData.GetProductControllerV2();
             ActionResult<Product> result = await controller.PutProductStockQuantity(999, 5);
             Assert.IsType<NotFoundResult>(result.Result);
         }
