@@ -1,5 +1,6 @@
-﻿using CaseStudyWebApi.Controllers;
+﻿using CaseStudyWebApi.Controllers.v1;
 using CaseStudyWebApi.Data;
+using CaseStudyWebApi.Data.Persistent;
 using Microsoft.EntityFrameworkCore;
 
 namespace CaseStudyUnitTest

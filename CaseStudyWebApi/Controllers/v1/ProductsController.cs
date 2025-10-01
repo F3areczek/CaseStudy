@@ -1,14 +1,18 @@
-﻿using CaseStudyWebApi.Data;
+﻿using Asp.Versioning;
+using CaseStudyWebApi.Data;
+using CaseStudyWebApi.Data.Nonpersistent;
+using CaseStudyWebApi.Data.Persistent;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CaseStudyWebApi.Controllers
+namespace CaseStudyWebApi.Controllers.v1
 {
     /// <summary>
     /// Controller for Product endpoints
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ProductsController : ControllerBase
     {
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CaseStudyWebApi.Data.Persistent;
+using Microsoft.EntityFrameworkCore;
 
 namespace CaseStudyWebApi.Data
 {
